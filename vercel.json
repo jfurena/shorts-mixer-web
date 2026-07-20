@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/api/:match*",
+      "destination": "http://2.24.222.145:3000/api/:match*"
+    },
+    {
+      "source": "/exports/:match*",
+      "destination": "http://2.24.222.145:3000/exports/:match*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

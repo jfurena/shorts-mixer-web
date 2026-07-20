@@ -15,7 +15,7 @@ import {
 
 import { playSound } from "./utils/audio";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+const API_URL = ""; // Forced empty to use Vercel rewrites (proxy to VPS)
 
 export default function App() {
   // Video and analysis states
