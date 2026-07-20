@@ -162,6 +162,9 @@ if __name__ == "__main__":
         else:
             font_name = "Arial"
 
+        # Calculate absolute MarginV based on expected output height
+        expected_h = 1920 if videoRatio == "916" else (1080 if videoRatio == "11" else 1080)
+        
         font_size = settings.get("fontSize", 24)
         # Scale font size based on video height (UI usually renders at ~600px height)
         # 26px in 600px height is 4.3% -> in 1920 is ~83px
@@ -171,8 +174,6 @@ if __name__ == "__main__":
         srt_escaped = srt_path.replace("\\", "/").replace(":", "\\:")
         
         # Build dynamic style
-        # Calculate absolute MarginV based on expected output height
-        expected_h = 1920 if videoRatio == "916" else (1080 if videoRatio == "11" else 1080)
         margin_v = int(expected_h * (subtitle_y / 100.0))
 
         subtitle_style = (

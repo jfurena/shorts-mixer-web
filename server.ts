@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import fs from "fs";
 import util from "util";
 import { createServer as createViteServer } from "vite";
@@ -332,7 +332,6 @@ app.post("/api/export-video", upload.single("video"), async (req, res) => {
     // Call Python script locally on VPS
     console.log("[Local] Ejecutando export.py localmente...");
     await new Promise<void>((resolve, reject) => {
-      const { spawn } = require("child_process");
       const child = spawn("python", ["export.py", videoPath, jsonPath]);
 
       child.stdout.on("data", (data: any) => {
