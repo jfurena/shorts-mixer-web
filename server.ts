@@ -120,7 +120,7 @@ Formatea la respuesta exactamente en JSON de acuerdo al siguiente esquema:
 
   "topic": "Tema principal detectado",
 
-  "totalEstimatedClips": 3,
+  "totalEstimatedClips": 10,
 
   "clips": [
 
@@ -132,9 +132,9 @@ Formatea la respuesta exactamente en JSON de acuerdo al siguiente esquema:
 
       "startTime": 5.0,
 
-      "endTime": 22.0,
+      "endTime": 56.0,
 
-      "duration": 17.0,
+      "duration": 51.0,
 
       "viralScore": 95,
 
@@ -242,7 +242,7 @@ Responde EXCLUSIVAMENTE con JSON válido siguiendo este esquema:
 
   "topic": "Tema principal detectado",
 
-  "totalEstimatedClips": 3,
+  "totalEstimatedClips": 10,
 
   "clips": [
 
@@ -252,11 +252,11 @@ Responde EXCLUSIVAMENTE con JSON válido siguiendo este esquema:
 
       "title": "Título gancho del clip",
 
-      "startTime": 120.0,
+      "startTime": 5.0,
 
-      "endTime": 174.5,
+      "endTime": 56.0,
 
-      "duration": 54.5,
+      "duration": 51.0,
 
       "viralScore": 95,
 
