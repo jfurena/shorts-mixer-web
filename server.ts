@@ -138,23 +138,10 @@ Formatea la respuesta exactamente en JSON de acuerdo al siguiente esquema:
 
       "viralScore": 95,
 
-      "reason": "Explicación de por qué este momento mantendrá la retención del usuario en los primeros 3 segundos.",
-
-      "transition": "Zoom In" or "Glitch" or "Slide Left" or "Flash Fade",
-
-      "subtitles": [
-
-        { "text": "¡El secreto mejor guardado!", "start": 5.0, "end": 7.2 },
-
-        { "text": "que nadie te está diciendo", "start": 7.3, "end": 9.5 },
-
-        { "text": "sobre este tema...", "start": 9.6, "end": 11.8 }
-
-      ],
-
-      "caption": "Copia persuasiva para la publicación en redes sociales.",
-
-      "hashtags": ["fyp", "parati", "viral", "editor"]
+      "reason": "Explicación breve de por qué este clip es viral.",
+      "transition": "Zoom In",
+      "caption": "Copia persuasiva",
+      "hashtags": ["fyp"]
 
 
 
@@ -178,9 +165,8 @@ REGLAS ABSOLUTAS:
 
 2. SUBTÍTULOS PERFECTAMENTE SINCRONIZADOS: Los timestamps de cada subtítulo ({ "start": X, "end": Y }) DEBEN corresponder EXACTAMENTE a las marcas de tiempo de la transcripción provista. Copia el texto y los tiempos LITERALMENTE de la transcripción. NUNCA inventes tiempos de subtítulos.
 
-3. COBERTURA: Genera un segmento de subtítulo por cada línea de transcripción dentro del clip. NO dejes huecos grandes sin subtítulos.
-
-4. Los tiempos en los subtítulos son TIEMPOS ABSOLUTOS del video (no relativos al clip). Por ejemplo, si el clip va de 120.0s a 175.0s, y hay una frase en la transcripción a [122.5s - 127.0s], el subtítulo tendrá "start": 122.5, "end": 127.0.`;
+3. COBERTURA: El servidor asignará los subtítulos automáticamente basados en el startTime y endTime. NO incluyas el array 'subtitles' en tu respuesta JSON. Solo define los tiempos.
+4. EXACTAMENTE 10 CLIPS: Es OBLIGATORIO que el JSON devuelva una lista con EXACTAMENTE 10 objetos en el array 'clips'. No 2, no 5. Deben ser 10 clips distintos.`;
 
 
 
@@ -213,18 +199,8 @@ ${transcript}
 
 
 INSTRUCCION CRÍTICA PARA SUBTÍTULOS:
-
-Cada objeto de subtítulo { "text": "...", "start": X, "end": Y } DEBE:
-
-- Tomar el texto LITERALMENTE de las líneas de la transcripción de arriba
-
-- Usar los tiempos de inicio y fin EXACTAMENTE como aparecen en la transcripción (formato [Xs - Ys])
-
-- NO redondear ni ajustar los tiempos
-
-- Cubrir CADA línea de transcripción que caiga dentro del clip
-
-Esto es lo que garantiza que los subtítulos estén sincronizados con lo que se dice en el video.` : `No se proveyó transcripción. Genera subtítulos creativos imaginando el diálogo del video.`}
+NO generes subtítulos. Omite la propiedad "subtitles" en tu JSON. El servidor los extraerá automáticamente.
+ENFOQUE: Solo concéntrate en encontrar los 10 mejores segmentos de 45-59 segundos y devolver el JSON con sus startTime y endTime.` : `No se proveyó transcripción. Genera subtítulos creativos imaginando el diálogo del video.`}
 
 
 
@@ -263,14 +239,6 @@ Responde EXCLUSIVAMENTE con JSON válido siguiendo este esquema:
       "reason": "Explicación de por qué este momento es viral.",
 
       "transition": "Zoom In",
-
-      "subtitles": [
-
-        { "text": "texto exacto de la transcripción", "start": 120.0, "end": 124.5 },
-
-        { "text": "siguiente frase de la transcripción", "start": 124.6, "end": 129.0 }
-
-      ],
 
       "caption": "Texto para publicación en redes sociales.",
 
