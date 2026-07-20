@@ -694,6 +694,20 @@ export default function App() {
       }
       
       setExportProgress(100);
+      
+      // Auto-download the exported video
+      if (result.url) {
+        const downloadUrl = result.url.startsWith("http") 
+          ? result.url 
+          : `${API_URL}${result.url}`;
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = selectedClip.title.replace(/[^a-zA-Z0-9]/g, "_") + ".mp4";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      
       setTimeout(() => setShowExportModal(false), 2000);
     } catch (error) {
       console.error("Export error:", error);
@@ -702,6 +716,7 @@ export default function App() {
       setTimeout(() => setExporting(false), 2000);
     }
   };
+
   
   // Download simulated subtitles file
   const downloadSrtFile = () => {
