@@ -146,13 +146,14 @@ app.post("/api/analyze-video", async (req, res) => {
     const langLabel = language === "en" ? "Inglés" : "Español";
 
     const systemInstruction = `Eres un editor de video experto en Inteligencia Artificial y un estratega de contenido viral.
-Tu tarea es analizar la transcripción de un video y extraer momentos virales en formato de clips verticales para TikTok, YouTube Shorts, Instagram Reels y Facebook Reels.
+Tu tarea es analizar la transcripción de un video y seleccionar EXACTAMENTE 10 momentos virales en formato de clips verticales para TikTok, YouTube Shorts, Instagram Reels y Facebook Reels.
 
 REGLAS ABSOLUTAS:
-1. DURACIÓN: Cada clip DEBE durar entre 45 y 59 segundos exactos (endTime - startTime). NUNCA menos de 45s ni 60s o más.
-2. SUBTÍTULOS PERFECTAMENTE SINCRONIZADOS: Los timestamps de cada subtítulo ({ "start": X, "end": Y }) DEBEN corresponder EXACTAMENTE a las marcas de tiempo de la transcripción provista. Copia el texto y los tiempos LITERALMENTE de la transcripción. NUNCA inventes tiempos de subtítulos.
-3. COBERTURA: Genera un segmento de subtítulo por cada línea de transcripción dentro del clip. NO dejes huecos grandes sin subtítulos.
-4. Los tiempos en los subtítulos son TIEMPOS ABSOLUTOS del video (no relativos al clip). Por ejemplo, si el clip va de 120.0s a 175.0s, y hay una frase en la transcripción a [122.5s - 127.0s], el subtítulo tendrá "start": 122.5, "end": 127.0.`;
+1. DURACIÓN OBLIGATORIA: Cada clip DEBE durar entre 45 y 59 segundos exactos. (endTime - startTime) DEBE ser >= 45 y <= 59. NUNCA menos de 45s.
+2. CANTIDAD OBLIGATORIA: DEBES retornar EXACTAMENTE 10 clips. Ni más, ni menos.
+3. NO incluyas subtítulos en el JSON. Los subtítulos se generarán automáticamente.
+4. Los tiempos startTime y endTime deben ser tiempos ABSOLUTOS del video en segundos.
+5. Elige los momentos más virales y con mayor retención de la audiencia.`;
 
     const userPrompt = `Analiza el siguiente video para extraer EXACTAMENTE 10 shorts destacados de acuerdo al tono seleccionado.
 
@@ -180,20 +181,17 @@ Formatea la respuesta exactamente en JSON de acuerdo al siguiente esquema:
   "title": "Título del video procesado",
   "summary": "Resumen general del análisis viral",
   "topic": "Tema principal detectado",
-  "totalEstimatedClips": 3,
+  "totalEstimatedClips": 10,
   "clips": [
     {
       "id": "clip-1",
       "title": "Título gancho del clip",
-      "startTime": 5.0,
-      "endTime": 22.0,
-      "duration": 17.0,
+      "startTime": 120.0,
+      "endTime": 170.0,
+      "duration": 50.0,
       "viralScore": 95,
       "reason": "Explicación de por qué este momento mantendrá la retención.",
       "transition": "Zoom In",
-      "subtitles": [
-        { "text": "¡El secreto mejor guardado!", "start": 5.0, "end": 7.2 }
-      ],
       "caption": "Copia persuasiva",
       "hashtags": ["fyp", "parati"]
     }
@@ -236,39 +234,21 @@ Formatea la respuesta exactamente en JSON de acuerdo al siguiente esquema:
     const resultText = mistralData.choices[0].message.content || "{}";
     const data = JSON.parse(resultText);
 
-    // Post-process subtitles to enforce TikTok style (max 2-3 words per line)
+    // Inject subtitles automatically from user's transcript (no AI subtitles)
+    const rawTranscript = parseTranscript(transcript || "");
+
     if (data.clips && Array.isArray(data.clips)) {
-      data.clips.forEach((clip: any) => {
-        if (clip.subtitles && Array.isArray(clip.subtitles)) {
-          const newSubtitles: any[] = [];
-          clip.subtitles.forEach((sub: any) => {
-            const words = sub.text.trim().split(/\s+/);
-            if (words.length <= 3) {
-              newSubtitles.push(sub);
-            } else {
-              // Split into chunks of 3 words max
-              const duration = sub.end - sub.start;
-              const timePerWord = duration / words.length;
-              let currentChunk: string[] = [];
-              let chunkStart = sub.start;
-              
-              for (let i = 0; i < words.length; i++) {
-                currentChunk.push(words[i]);
-                if (currentChunk.length >= 3 || i === words.length - 1) {
-                  const chunkEnd = chunkStart + (timePerWord * currentChunk.length);
-                  newSubtitles.push({
-                    text: currentChunk.join(" "),
-                    start: parseFloat(chunkStart.toFixed(2)),
-                    end: parseFloat(chunkEnd.toFixed(2))
-                  });
-                  currentChunk = [];
-                  chunkStart = chunkEnd;
-                }
-              }
-            }
-          });
-          clip.subtitles = newSubtitles;
-        }
+      data.clips = data.clips.map((clip: any, index: number) => {
+        const clipSubs = rawTranscript.filter(sub =>
+          (sub.start >= clip.startTime && sub.start < clip.endTime) ||
+          (sub.end > clip.startTime && sub.end <= clip.endTime) ||
+          (sub.start <= clip.startTime && sub.end >= clip.endTime)
+        );
+        return {
+          id: index + 1,
+          ...clip,
+          subtitles: splitSubtitles(clipSubs, 5)
+        };
       });
     }
 
