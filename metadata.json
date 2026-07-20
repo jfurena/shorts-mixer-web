@@ -1,0 +1,6 @@
+{
+  "name": "AI Video Shorts Creator",
+  "description": "Extract highlighted moments from videos, customize subtitle styles and transitions, and format them as vertical shorts for social media with AI-generated captions and tags.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

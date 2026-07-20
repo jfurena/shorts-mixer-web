@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cargando AI Shorts Creator...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #020617; /* slate-950 */
+      color: #94a3b8; /* slate-400 */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      -webkit-app-region: drag; /* allows dragging window */
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(139, 92, 246, 0.2); /* purple-500 with opacity */
+      border-left-color: #a855f7; /* purple-500 */
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ffffff, #f1f5f9, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 0 8px 0;
+    }
+    p {
+      font-size: 0.875rem;
+      color: #64748b; /* slate-500 */
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <h1>Optimizando motor de IA...</h1>
+  <p>Esto puede tardar unos minutos la primera vez. Por favor espera.</p>
+</body>
+</html>
